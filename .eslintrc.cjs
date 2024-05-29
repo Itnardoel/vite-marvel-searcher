@@ -1,3 +1,5 @@
+const { off } = require('process')
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -25,5 +27,6 @@ module.exports = {
     'import/no-absolute-path': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-misused-promises': off,
   },
 }

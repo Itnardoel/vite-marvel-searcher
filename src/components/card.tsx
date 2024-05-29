@@ -9,13 +9,16 @@ export const Card = ({ character }: { character: Character }) => {
   const favoriteCharacters = useCharactersStore(state => state.favoriteCharacters)
   const fetchCharacterComics = useCharactersStore(state => state.fetchCharacterComics)
   const setCharacterName = useCharactersStore(state => state.setCharacterName)
+  const characterName = useCharactersStore(state => state.characterName)
   const isShowFavorites = useCharactersStore(state => state.isShowFavorites)
+  const setCharacterId = useCharactersStore(state => state.setCharacterId)
 
   const handleClick = (id: number, name: string) => {
-    if (!isShowFavorites) {
+    if (!isShowFavorites && characterName !== name) {
       fetchCharacterComics(id)
+      setCharacterName(name)
+      setCharacterId(id)
     }
-    setCharacterName(name)
     toggleShowModal()
   }
 

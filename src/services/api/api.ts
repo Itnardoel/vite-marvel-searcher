@@ -9,42 +9,54 @@ const BASE_PARAMS = `ts=${ts}&apikey=${PUBLIC_KEY}&hash=${hash}`
 const TOTAL_CHARACTERS_API = 1564
 const API_REQUEST_LIMIT = 8
 const offset = Math.floor((Math.random() * (TOTAL_CHARACTERS_API - API_REQUEST_LIMIT)))
+let comicPage = 0
+let currentCharacterId = 0
 
 export const getCharacters = async (filter?: string) => {
-  if (filter === undefined || filter === '') { // <-- Call API without filter
+  if (filter === undefined || filter === '') { // <-- API call without filter
     try {
       const res = await fetch(`${BASE_URL}characters?${BASE_PARAMS}&limit=${API_REQUEST_LIMIT}` + `&offset=${offset}`)
+      if (!res.ok) throw new Error('Error on fetch')
       const json = await res.json()
       return json.data.results
     } catch (error) {
       console.error(error)
-      if (error instanceof Error) {
-        throw new Error(error.message)
-      }
     }
-  } else { // <-- Call API with filter
+  } else { // <-- API call with filter
     try {
-      const res = await fetch(`${BASE_URL}characters?${BASE_PARAMS}&limit=${API_REQUEST_LIMIT}` + `&nameStartsWith=${filter}`)
+      const res = await fetch(`${BASE_URL}characters?${BASE_PARAMS}&limit=100` + `&nameStartsWith=${filter}`)
+      if (!res.ok) throw new Error('Error on fetch')
       const json = await res.json()
       return json.data.results
     } catch (error) {
       console.error(error)
-      if (error instanceof Error) {
-        throw new Error(error.message)
-      }
     }
   }
 }
 
 export const getCharacterComicsById = async (characterId: number) => {
+  if (currentCharacterId !== characterId) {
+    currentCharacterId = characterId
+    comicPage = 0
+  }
   try {
-    const res = await fetch(`${BASE_URL}characters/${characterId}/comics?${BASE_PARAMS}&limit=${API_REQUEST_LIMIT}`)
+    const res = await fetch(`${BASE_URL}characters/${characterId}/comics?${BASE_PARAMS}&limit=${API_REQUEST_LIMIT}&offset=${comicPage}`)
+    if (!res.ok) throw new Error('Error on fetch')
+    comicPage += API_REQUEST_LIMIT
     const json = await res.json()
     return json.data.results
   } catch (error) {
     console.error(error)
-    if (error instanceof Error) {
-      throw new Error(error.message)
-    }
+  }
+}
+
+export const getComicById = async (comicId: number) => {
+  try {
+    const res = await fetch(`${BASE_URL}comics/${comicId}?${BASE_PARAMS}`)
+    if (!res.ok) throw new Error('Error on fetch')
+    const json = await res.json()
+    return json.data.results
+  } catch (error) {
+    console.error(error)
   }
 }

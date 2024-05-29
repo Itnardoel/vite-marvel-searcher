@@ -1,18 +1,21 @@
 import { create } from 'zustand'
-import { type Character, type ComicsCharacter } from '../types/types'
-import { getCharacters, getCharacterComicsById } from '../services/api/api'
 import { persist } from 'zustand/middleware'
+import { type Character, type ComicsCharacter } from '../types/types'
+import { getCharacters, getCharacterComicsById, getComicById } from '../services/api/api'
 
 interface State {
   characters: Character[]
   fetchCharacters: (filter?: string) => Promise<void>
   isCharactersLoading: boolean
   characterName: string
-  setCharacterName: (name: string) => void
+  setCharacterName: (characterName: string) => void
+  characterId: number
+  setCharacterId: (characterId: number) => void
   comics: ComicsCharacter[]
   fetchCharacterComics: (id: number) => Promise<void>
   isCharacterComicsLoading: boolean
   getCharacterComicByID: (id: number) => Promise<void>
+  fetchComicByID: (id: number) => Promise<void>
   comicDetail: ComicsCharacter | Record<string, never>
   favoriteCharacters: Character[]
   handleFavoriteCharacter: (character: Character) => void
@@ -42,22 +45,31 @@ export const useCharactersStore = create<State>()(
 
       characterName: '',
 
-      setCharacterName: (name: string) => {
-        set({ characterName: name })
+      setCharacterName: (characterName) => {
+        set({ characterName })
+      },
+
+      characterId: 0,
+
+      setCharacterId: (characterId) => {
+        set({ characterId })
       },
 
       comics: [],
 
-      fetchCharacterComics: async (characterId: number) => {
+      fetchCharacterComics: async (characterId) => {
+        if (get().characterId !== characterId) {
+          set({ comics: [] })
+        }
         set({ isCharacterComicsLoading: true })
         const characterComicsFromAPI: ComicsCharacter[] = await getCharacterComicsById(characterId)
-        set({ comics: characterComicsFromAPI })
+        set({ comics: [...get().comics, ...characterComicsFromAPI] })
         set({ isCharacterComicsLoading: false })
       },
 
       isCharacterComicsLoading: false,
 
-      getCharacterComicByID: async (id: number) => {
+      getCharacterComicByID: async (id) => {
         // Search comics in localstorage if is showing favorites
         if (get().isShowFavorites) {
           const foundComicsIndex = get().favoriteCharacters.findIndex(favoriteCharacter => favoriteCharacter.name === get().characterName)
@@ -69,6 +81,13 @@ export const useCharactersStore = create<State>()(
 
         const comicFound = get().comics.find(comic => comic.id === id)
         set({ comicDetail: comicFound })
+      },
+
+      fetchComicByID: async (characterId) => {
+        set({ isCharacterComicsLoading: true })
+        const [comicFromAPI] = await getComicById(characterId)
+        set({ comicDetail: comicFromAPI })
+        set({ isCharacterComicsLoading: false })
       },
 
       comicDetail: {},
