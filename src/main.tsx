@@ -6,7 +6,6 @@ import HomePage from './pages/HomePage'
 import ComicPage from './pages/ComicPage'
 import ErrorPage from './pages/ErrorPage'
 import Characters from './components/characters'
-// import { ComicDetail } from './components/comicDetail'
 import './index.css'
 
 const router = createBrowserRouter([

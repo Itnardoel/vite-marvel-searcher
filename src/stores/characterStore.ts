@@ -11,7 +11,7 @@ interface State {
   setCharacterName: (characterName: string) => void
   characterId: number
   setCharacterId: (characterId: number) => void
-  comics: ComicsCharacter[]
+  characterComics: {comics: ComicsCharacter[], totalComics: boolean}
   fetchCharacterComics: (id: number) => Promise<void>
   isCharacterComicsLoading: boolean
   getCharacterComicByID: (id: number) => Promise<void>
@@ -55,15 +55,17 @@ export const useCharactersStore = create<State>()(
         set({ characterId })
       },
 
-      comics: [],
+      characterComics: {comics: [], totalComics: false},
 
       fetchCharacterComics: async (characterId) => {
         if (get().characterId !== characterId) {
-          set({ comics: [] })
+          set({ characterComics: {comics: [], totalComics: false} })
         }
         set({ isCharacterComicsLoading: true })
-        const characterComicsFromAPI: ComicsCharacter[] = await getCharacterComicsById(characterId)
-        set({ comics: [...get().comics, ...characterComicsFromAPI] })
+        // const characterComicsFromAPI = await getCharacterComicsById(characterId)
+        const {comics, totalComics} = await getCharacterComicsById(characterId)
+        // set({ characterComics: {comics: [...get().characterComics.comics, ...characterComicsFromAPI?.comics], totalComics: characterComicsFromAPI.totalComics} })
+        set({ characterComics: {comics: [...get().characterComics.comics, ...comics], totalComics: totalComics} })
         set({ isCharacterComicsLoading: false })
       },
 
@@ -79,7 +81,7 @@ export const useCharactersStore = create<State>()(
           return
         }
 
-        const comicFound = get().comics.find(comic => comic.id === id)
+        const comicFound = get().characterComics.comics.find(comic => comic.id === id)
         set({ comicDetail: comicFound })
       },
 

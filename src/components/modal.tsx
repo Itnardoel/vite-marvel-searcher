@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 export const ModalComics = () => {
   const characterName = useCharactersStore(state => state.characterName)
-  const comics = useCharactersStore(state => state.comics)
+  const characterComics = useCharactersStore(state => state.characterComics)
   const isCharacterComicsLoading = useCharactersStore(state => state.isCharacterComicsLoading)
   const favoriteCharacters = useCharactersStore(state => state.favoriteCharacters)
   const isShowFavorites = useCharactersStore(state => state.isShowFavorites)
@@ -41,15 +41,15 @@ export const ModalComics = () => {
                   ? favoriteCharacters[foundComicsIndex].comics.map(favoriteComic => {
                     return <Comic key={favoriteComic.id} comic={favoriteComic} />
                   })
-                  : comics.map(comic => {
+                  : characterComics.comics.map(comic => {
                     return <Comic key={comic.id} comic={comic} />
                   })
               }
               {isShowFavorites
                 ? favoriteCharacters[foundComicsIndex]?.comics.length === 0 && <h2 className='flex flex-grow justify-center items-center font-normal text-2xl font-[Montserrat]'>No comics added</h2>
-                : comics.length === 0 && <h2 className='flex flex-grow justify-center items-center font-normal text-2xl font-[Montserrat]'>No comics available</h2>
+                : characterComics.comics.length === 0 && <h2 className='flex flex-grow justify-center items-center font-normal text-2xl font-[Montserrat]'>No comics available</h2>
               }
-              {!isShowFavorites && !isLoadingMore && <button className='bg-white hover:bg-gray-100 text-gray-800 font-semibold self-center py-2 px-4 border border-gray-400 rounded shadow' onClick={handleClick}>Load more comics</button>}
+              {!isShowFavorites && !isLoadingMore && characterComics.totalComics && <button className='bg-white hover:bg-gray-100 text-gray-800 font-semibold self-center py-2 px-4 border border-gray-400 rounded shadow' onClick={handleClick}>Load more comics</button>}
               {!isShowFavorites && isLoadingMore && <LoadingButton />}
             </div>
           </div>}
