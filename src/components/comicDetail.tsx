@@ -3,7 +3,7 @@ import { useCharactersStore } from '../stores/characterStore'
 export const ComicDetail = () => {
   const comicDetail = useCharactersStore(state => state.comicDetail)
 
-  if (Object.keys(comicDetail).length === 0) return <h1 className='text-2xl font-semibold font-[Montserrat] pt-8 text-center'>No comic found</h1>
+  if (Object.keys(comicDetail).length === 0) return
 
   return (
     <div className="flex flex-col lg:flex-row justify-center gap-8 pt-10 pr-4 pb-4 pl-4">

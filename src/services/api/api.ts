@@ -64,5 +64,6 @@ export const getComicById = async (comicId: number) => {
     return json.data.results
   } catch (error) {
     console.error(error)
+    return []
   }
 }

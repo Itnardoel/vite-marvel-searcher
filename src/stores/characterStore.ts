@@ -62,9 +62,7 @@ export const useCharactersStore = create<State>()(
           set({ characterComics: {comics: [], totalComics: false} })
         }
         set({ isCharacterComicsLoading: true })
-        // const characterComicsFromAPI = await getCharacterComicsById(characterId)
         const {comics, totalComics} = await getCharacterComicsById(characterId)
-        // set({ characterComics: {comics: [...get().characterComics.comics, ...characterComicsFromAPI?.comics], totalComics: characterComicsFromAPI.totalComics} })
         set({ characterComics: {comics: [...get().characterComics.comics, ...comics], totalComics: totalComics} })
         set({ isCharacterComicsLoading: false })
       },
