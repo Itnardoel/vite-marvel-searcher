@@ -16,9 +16,9 @@ export const Card = ({ character }: { character: Character }) => {
   const handleClick = (id: number, name: string) => {
     if (!isShowFavorites && characterName !== name) {
       fetchCharacterComics(id)
-      setCharacterName(name)
-      setCharacterId(id)
     }
+    setCharacterName(name)
+    setCharacterId(id)
     toggleShowModal()
   }
 

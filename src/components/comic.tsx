@@ -28,7 +28,7 @@ export const Comic = ({ comic }: { comic: ComicsCharacter }) => {
   }
 
   return (
-    <div key={comic.id} className='flex gap-3  mr-3'>
+    <div key={comic.id} className='flex gap-3  mr-3 hover:bg-gray-100'>
       <Link to={`comic/${comic.id}`} className='flex-shrink-0'>
         <img src={`${comic.thumbnail.path}/portrait_xlarge.${comic.thumbnail.extension}`} alt={comic.title} className='rounded self-start' onClick={() => { handleClick(comic.id) }} />
       </Link>
